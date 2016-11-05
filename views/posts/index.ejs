@@ -1,0 +1,10 @@
+<h2>All the Posts</h2>
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Content</th>
+  </tr>
+  <% data.forEach(function(post){ %>
+    <%- include _post %>
+  <% }); %>
+</table>

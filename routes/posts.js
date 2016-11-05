@@ -3,44 +3,45 @@ var router = express.Router();
 var pgp = require('pg-promise')();
 var db = pgp('postgres://localhost:5432/userauth');
 
-// GET /users
+// GET /posts
 router.get('/', function(req, res, next) {
-  db.any('select * from users')
+  db.any('select * from posts')
     .then(function (data) {
       res.status(200)
-      return res.render('users/index', {_layoutFile: 'layouts/main', title: 'Users', data: data });
+      return res.render('posts/index', {_layoutFile: 'layouts/main', title: 'Posts', data: data });
     })
     .catch(function (err) {
+      debugger
       return next(err);
     });
 });
 
-// GET /users
+// GET /posts
 router.get('/new', function(req, res, next) {
-  return res.render('users/new', {_layoutFile: 'layouts/main', title: 'New User' });
+  return res.render('posts/new', {_layoutFile: 'layouts/main', title: 'New Post' });
 });
 
-// POST /users
+// POST /posts
 router.post('/new', function(req, res, next) {
-  return res.render('users/new', {_layoutFile: 'layouts/main', title: 'New User' });
+  return res.render('posts/new', {_layoutFile: 'layouts/main', title: 'New Post' });
 });
 
-// GET /users
+// GET /posts
 router.get('/:id', function(req, res, next) {
   var id = req.params.id;
-  return res.render('users/show', {_layoutFile: 'layouts/main', title: 'Single Blog' });
+  return res.render('posts/show', {_layoutFile: 'layouts/main', title: 'Single Post' });
 });
 
-// GET /users
+// GET /posts
 router.get('/:id/edit', function(req, res, next) {
   var id = req.params.id;
-  return res.render('users/edit', {_layoutFile: 'layouts/main', title: 'Single Blog' });
+  return res.render('posts/edit', {_layoutFile: 'layouts/main', title: 'Single Post' });
 });
 
-// POST /users
+// POST /posts
 router.post('/:id/edit', function(req, res, next) {
   var id = req.params.id;
-  return res.render('users/edit', {_layoutFile: 'layouts/main', title: 'Single Blog' });
+  return res.render('posts/edit', {_layoutFile: 'layouts/main', title: 'Single Post' });
 });
 
 module.exports = router;

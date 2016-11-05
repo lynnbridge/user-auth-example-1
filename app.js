@@ -13,10 +13,10 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
 var routes = require('./routes/index');
-var blogs = require('./routes/blogs');
+var posts = require('./routes/posts');
 var users = require('./routes/users');
 app.use('/', routes);
-app.use('/blogs', blogs);
+app.use('/posts', posts);
 app.use('/users', users);
 
 // catch 404 and forward to error handler
