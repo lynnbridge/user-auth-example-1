@@ -12,7 +12,7 @@ app.engine('ejs', engine);
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
-var routes = require('./routes/routes');
+var routes = require('./routes/index');
 var blogs = require('./routes/blogs');
 var users = require('./routes/users');
 app.use('/', routes);
@@ -29,7 +29,6 @@ app.use(function(req, res, next) {
 // error handler
 // define as the last app.use callback
 app.use(function(err, req, res, next) {
-  console.log('ouch');
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,

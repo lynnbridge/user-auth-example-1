@@ -38,5 +38,4 @@ router.get('/error', function(req, res, next) {
   return res.render('error', {_layoutFile: 'layouts/main', title: 'Error' });
 });
 
-
 module.exports = router;
