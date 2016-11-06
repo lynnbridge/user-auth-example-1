@@ -28,7 +28,14 @@ router.post('/new', function(req, res, next) {
 // GET /users
 router.get('/:id', function(req, res, next) {
   var id = req.params.id;
-  return res.render('users/show', {_layoutFile: 'layouts/main', title: 'Single Blog' });
+  db.one('select * from users where id = $1', id)
+    .then(function (data) {
+      res.status(200);
+      return res.render('users/show', {_layoutFile: 'layouts/main', title: data.name, user: data });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
 });
 
 // GET /users

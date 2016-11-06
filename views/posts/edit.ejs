@@ -1,1 +1,6 @@
-<h2>Edit your face</h2>
+<h2>Edit the post</h2>
+<form class="" action='./edit' method="post">
+  <input type="text" name="title" value='<%= post.title %>' placeholder="name">
+  <input type="textarea" column=4 name="content" value='<%= post.content %>' placeholder="Enter your post here :)">
+  <input type="submit" value="Submit">
+</form>

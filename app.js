@@ -2,6 +2,7 @@ var express = require('express');
 var engine = require('ejs-mate');
 var session = require('express-session');
 var app = express();
+var bodyParser = require('body-parser');
 
 // serve static files from /public
 app.use(express.static(__dirname + '/public'));
@@ -12,6 +13,13 @@ app.engine('ejs', engine);
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
+// Body parser
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
+
+// routes
 var routes = require('./routes/index');
 var posts = require('./routes/posts');
 var users = require('./routes/users');

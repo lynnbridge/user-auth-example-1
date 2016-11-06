@@ -11,7 +11,6 @@ router.get('/', function(req, res, next) {
       return res.render('posts/index', {_layoutFile: 'layouts/main', title: 'Posts', data: data });
     })
     .catch(function (err) {
-      debugger
       return next(err);
     });
 });
@@ -23,25 +22,56 @@ router.get('/new', function(req, res, next) {
 
 // POST /posts
 router.post('/new', function(req, res, next) {
-  return res.render('posts/new', {_layoutFile: 'layouts/main', title: 'New Post' });
+  db.none('insert into posts(title, content)' +
+      'values(${title}, ${content})',
+    req.body)
+    .then(function () {
+      res.status(200);
+      res.redirect('/posts');
+    })
+    .catch(function (err) {
+      return next(err);
+    });
 });
 
 // GET /posts
 router.get('/:id', function(req, res, next) {
-  var id = req.params.id;
-  return res.render('posts/show', {_layoutFile: 'layouts/main', title: 'Single Post' });
+  var id = parseInt(req.params.id);
+  db.one('select * from posts where id = $1', id)
+    .then(function (data) {
+      res.status(200);
+      return res.render('posts/show', {_layoutFile: 'layouts/main', title: data.title, post: data });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
 });
 
 // GET /posts
 router.get('/:id/edit', function(req, res, next) {
   var id = req.params.id;
-  return res.render('posts/edit', {_layoutFile: 'layouts/main', title: 'Single Post' });
+  db.one('select * from posts where id = $1', id)
+    .then(function (data) {
+      res.status(200)
+      return res.render('posts/edit', {_layoutFile: 'layouts/main', title: data.title, post: data });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+
 });
 
-// POST /posts
+// PUT /posts
 router.post('/:id/edit', function(req, res, next) {
-  var id = req.params.id;
-  return res.render('posts/edit', {_layoutFile: 'layouts/main', title: 'Single Post' });
+  db.none('update posts set title=$1, content=$2 where id=$3',
+    [req.body.title, req.body.content, parseInt(req.params.id)])
+    .then(function () {
+      res.status(200)
+      res.redirect('/posts');
+    })
+    .catch(function (err) {
+      return next(err);
+    });
 });
 
 module.exports = router;
