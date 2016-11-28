@@ -1,13 +1,24 @@
 var express = require('express');
 var router = express.Router();
-var pgp = require('pg-promise')();
+var promise = require('bluebird');
+var options = {
+  promiseLib: promise
+};
+var pgp = require('pg-promise')(options);
 var db = pgp('postgres://localhost:5432/userauth');
 
-// GET /posts
+router.use( function( req, res, next ) {
+  if ( req.query._method == 'DELETE' ) {
+    req.method = 'DELETE';
+    req.url = req.path;
+  }
+  next();
+});
+
+// GET index /posts/
 router.get('/', function(req, res, next) {
   db.any('select * from posts')
     .then(function (data) {
-      res.status(200)
       return res.render('posts/index', {_layoutFile: 'layouts/main', title: 'Posts', data: data });
     })
     .catch(function (err) {
@@ -15,18 +26,17 @@ router.get('/', function(req, res, next) {
     });
 });
 
-// GET /posts
+// GET new /posts view
 router.get('/new', function(req, res, next) {
   return res.render('posts/new', {_layoutFile: 'layouts/main', title: 'New Post' });
 });
 
-// POST /posts
+// POST new /posts
 router.post('/new', function(req, res, next) {
   db.none('insert into posts(title, content)' +
       'values(${title}, ${content})',
     req.body)
     .then(function () {
-      res.status(200);
       res.redirect('/posts');
     })
     .catch(function (err) {
@@ -34,12 +44,11 @@ router.post('/new', function(req, res, next) {
     });
 });
 
-// GET /posts
+// GET /posts show
 router.get('/:id', function(req, res, next) {
   var id = parseInt(req.params.id);
   db.one('select * from posts where id = $1', id)
     .then(function (data) {
-      res.status(200);
       return res.render('posts/show', {_layoutFile: 'layouts/main', title: data.title, post: data });
     })
     .catch(function (err) {
@@ -47,12 +56,11 @@ router.get('/:id', function(req, res, next) {
     });
 });
 
-// GET /posts
+// GET /posts edit
 router.get('/:id/edit', function(req, res, next) {
-  var id = req.params.id;
+  var id = parseInt(req.params.id);
   db.one('select * from posts where id = $1', id)
     .then(function (data) {
-      res.status(200)
       return res.render('posts/edit', {_layoutFile: 'layouts/main', title: data.title, post: data });
     })
     .catch(function (err) {
@@ -61,12 +69,23 @@ router.get('/:id/edit', function(req, res, next) {
 
 });
 
-// PUT /posts
+// PUT /posts edit
 router.post('/:id/edit', function(req, res, next) {
   db.none('update posts set title=$1, content=$2 where id=$3',
     [req.body.title, req.body.content, parseInt(req.params.id)])
     .then(function () {
-      res.status(200)
+      res.redirect('/posts');
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+});
+
+//Delete posts
+router.delete('/:id', function(req, res, next){
+  var id = parseInt(req.params.id);
+  db.result('delete from posts where id = $1', id)
+    .then(function (result) {
       res.redirect('/posts');
     })
     .catch(function (err) {

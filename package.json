@@ -9,7 +9,10 @@
   },
   "dependencies": {
     "bcrypt": "^0.8.7",
+    "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
+    "connect-pg-simple": "^3.1.2",
+    "dotenv": "^2.0.0",
     "ejs": "^2.5.2",
     "ejs-mate": "^2.3.0",
     "express": "^4.14.0",

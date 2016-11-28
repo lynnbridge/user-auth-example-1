@@ -1,1 +1,7 @@
-<h2>Edit me Bro</h2>
+<h2>Edit the post</h2>
+<form class="" action='./edit' method="post">
+  <input type="text" name="name" value='<%= user.name %>' placeholder="Name">
+  <input type="textarea" name="email" value='<%= user.email %>' placeholder="Email">
+  <input type="textarea" name="password" value='<%= user.password %>' placeholder="Password">
+  <input type="submit" value="Submit">
+</form>

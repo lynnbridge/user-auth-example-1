@@ -1,8 +1,11 @@
+require('dotenv').load();
 var express = require('express');
 var engine = require('ejs-mate');
 var session = require('express-session');
+var pgp = require('pg-promise')();
 var app = express();
 var bodyParser = require('body-parser');
+
 
 // serve static files from /public
 app.use(express.static(__dirname + '/public'));
@@ -12,6 +15,15 @@ app.engine('ejs', engine);
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
+
+app.use(session({
+  secret: process.env.COOKIE_SECRET,
+  name: 'userId',
+  resave: true,
+  saveUninitialized: false,
+  secure: true,
+  cookie: { maxAge: 60 * 60 * 1000 } // 30 days
+}));
 
 // Body parser
 app.use(bodyParser.urlencoded({
