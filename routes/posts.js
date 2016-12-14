@@ -5,7 +5,7 @@ var options = {
   promiseLib: promise
 };
 var pgp = require('pg-promise')(options);
-var db = pgp('postgres://localhost:5432/userauth');
+var db = pgp(process.env.DATABASE_URL);
 
 router.use( function( req, res, next ) {
   if ( req.query._method == 'DELETE' ) {
