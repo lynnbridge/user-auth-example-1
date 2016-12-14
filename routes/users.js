@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt');
 var pgp = require('pg-promise')();
-var db = pgp('postgres://localhost:5432/userauth');
+var db = pgp(process.env.DATABASE_URL);
 
 router.use( function( req, res, next ) {
   if ( req.query._method == 'DELETE' ) {
